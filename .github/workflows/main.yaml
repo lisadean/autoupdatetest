@@ -30,7 +30,7 @@ jobs:
           echo "The PR number is ${{ github.event.number }}"
       - uses: styfle/cancel-workflow-action@0.8.0
         with:
-          access_token: ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+          access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout Code
         run: echo "Running main.yaml"

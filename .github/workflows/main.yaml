@@ -1,0 +1,38 @@
+name: 'Main Build'
+on:
+  push:
+    branches:
+      - main
+jobs:
+  autoupdate:
+    name: autoupdate
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: docker://chinthakagodawita/autoupdate-action:v1
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          PR_FILTER: 'labelled'
+          PR_LABELS: 'auto-update'
+          MERGE_MSG: 'all hail our robot overlords, branch has been synced with latest main'
+          DRY_RUN: 'false'
+          MERGE_CONFLICT_ACTION: 'ignore'
+
+  branch-build:
+    name: Branch Build
+    needs: autoupdate
+    if: ((github.event_name == 'push' && contains(github.event.pull_request.labels.*.name, 'auto-update')) || (github.event_name == 'pull_request'))
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - name: Building the Branch
+        run: |
+          echo "Building ... $GITHUB_REF"
+          echo "The PR number is ${{ github.event.number }}"
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+
+      - name: Checkout Code
+        run: echo "Running main.yaml"
+      - uses: actions/checkout@v2

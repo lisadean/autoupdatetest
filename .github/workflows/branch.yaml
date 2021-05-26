@@ -1,0 +1,21 @@
+name: 'Main Build'
+on:
+  pull_request:
+jobs:
+  branch-build:
+    name: Branch Build
+    if: ((github.event_name == 'push' && contains(github.event.pull_request.labels.*.name, 'auto-update')) || (github.event_name == 'pull_request'))
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - name: Building the Branch
+        run: |
+          echo "Building ... $GITHUB_REF"
+          echo "The PR number is ${{ github.event.number }}"
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ secrets.PACKAGES_ACCESS_TOKEN }}
+
+      - name: Checkout Code
+        run: echo "Running branch.yaml"
+      - uses: actions/checkout@v2

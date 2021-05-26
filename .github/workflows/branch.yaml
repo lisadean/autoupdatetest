@@ -1,9 +1,6 @@
 name: 'Branch Build'
 on:
   pull_request:
-  push:
-    branches-ignore:
-      - main
 jobs:
   branch-build:
     name: Branch Build

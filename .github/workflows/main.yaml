@@ -20,7 +20,6 @@ jobs:
   branch-build:
     name: Branch Build
     needs: autoupdate
-    if: ((github.event_name == 'push' && contains(github.event.pull_request.labels.*.name, 'auto-update')) || (github.event_name == 'pull_request'))
     # Operating System
     runs-on: ubuntu-latest
     # Job steps

@@ -1,4 +1,4 @@
-name: 'Main Build'
+name: 'Branch Build'
 on:
   pull_request:
 jobs:

@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          GITHUB_TOKEN: '${{ secrets.WORKFLOW_TOKEN }}'
           PR_FILTER: 'labelled'
           PR_LABELS: 'auto-update'
           MERGE_MSG: 'all hail our robot overlords, branch has been synced with latest main'

@@ -9,18 +9,21 @@ on:
         branches:
             - main
 jobs:
-    autoupdate:
-        name: Autoupdate
-        runs-on: ubuntu-18.04
+    sleep:
+        name: Sleep a bit
+        runs-on: ubuntu-latest
         steps:
-            - name: Sleep a bit
-              # This is to give enough time for the Chromatic baseline to be run before branch
-              # visual regression checks
-              uses: whatnick/wait-action@v0.1.2
+            # This is to give enough time for the Chromatic baseline to be run before branch
+            # visual regression checks
+            - uses: whatnick/wait-action@v0.1.2
               with:
                 time: '1m'
-            - name: Update labeled PRs
-              uses: docker://chinthakagodawita/autoupdate-action:v1
+    autoupdate:
+        name: Update labeled PRs
+        runs-on: ubuntu-18.04
+        needs: sleep
+        steps:
+            - uses: docker://chinthakagodawita/autoupdate-action:v1
               env:
                   # This cannot be run with GITHUB_TOKEN
                   GITHUB_TOKEN: '${{ secrets.WORKFLOW_TOKEN }}'

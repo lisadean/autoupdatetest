@@ -1,28 +1,12 @@
-name: 'Main Build'
+name: 'Main Build - no autoupdate'
 on:
   push:
     branches:
       - main
 jobs:
-  autoupdate:
-    name: autoupdate
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: docker://chinthakagodawita/autoupdate-action:v1
-        env:
-          GITHUB_TOKEN: '${{ secrets.WORKFLOW_TOKEN }}'
-          PR_FILTER: 'labelled'
-          PR_LABELS: 'auto-update'
-          MERGE_MSG: 'all hail our robot overlords, branch has been synced with latest main'
-          DRY_RUN: 'false'
-          MERGE_CONFLICT_ACTION: 'ignore'
-
   branch-build:
     name: Branch Build
-    needs: autoupdate
-    # Operating System
     runs-on: ubuntu-latest
-    # Job steps
     steps:
       - name: Building the Branch
         run: |

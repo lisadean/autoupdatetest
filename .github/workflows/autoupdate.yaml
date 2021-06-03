@@ -1,0 +1,31 @@
+name: 'Autoupdate branches on main push'
+# Workflows run with GITHUB_TOKEN cannot trigger other workflows and we want the branch build to run
+# on any updated branches, so a different access token must be used. We're re-using
+# WORKFLOW_TOKEN for this purpose.
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
+# Also, do not use github.token. Difference between GITHUB_TOKEN and github.token: https://stackoverflow.com/a/66903734/2402197
+on:
+    push:
+        branches:
+            - main
+jobs:
+    autoupdate:
+        name: Autoupdate
+        runs-on: ubuntu-18.04
+        steps:
+            - name: Sleep a bit
+              # This is to give enough time for the Chromatic baseline to be run before branch
+              # visual regression checks
+              uses: whatnick/wait-action@v0.1.2
+              with:
+                time: '1m'
+            - name: Update labeled PRs
+            - uses: docker://chinthakagodawita/autoupdate-action:v1
+              env:
+                  # This cannot be run with GITHUB_TOKEN
+                  GITHUB_TOKEN: '${{ secrets.WORKFLOW_TOKEN }}'
+                  PR_FILTER: 'labelled'
+                  PR_LABELS: 'auto-update'
+                  MERGE_MSG: 'all hail our robot overlords, branch has been synced with latest main by autoupdate.yaml'
+                  DRY_RUN: 'false'
+                  MERGE_CONFLICT_ACTION: 'ignore'

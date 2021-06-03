@@ -1,7 +1,7 @@
 name: 'Autoupdate branches on main push'
 # Workflows run with GITHUB_TOKEN cannot trigger other workflows and we want the branch build to run
 # on any updated branches, so a different access token must be used. We're re-using
-# PACKAGES_ACCESS_TOKEN for this purpose.
+# WORKFLOW_TOKEN for this purpose.
 # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
 # Also, do not use github.token. Difference between GITHUB_TOKEN and github.token: https://stackoverflow.com/a/66903734/2402197
 on:
@@ -20,7 +20,7 @@ jobs:
               with:
                 time: '1m'
             - name: Update labeled PRs
-            - uses: docker://chinthakagodawita/autoupdate-action:v1
+              uses: docker://chinthakagodawita/autoupdate-action:v1
               env:
                   # This cannot be run with GITHUB_TOKEN
                   GITHUB_TOKEN: '${{ secrets.WORKFLOW_TOKEN }}'
